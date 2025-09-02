@@ -1,0 +1,22 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: go-cli-template
+  title: "Go CLI Tool"
+  description: "Plantilla para crear un CLI en Go con Cobra"
+spec:
+  owner: tools-team
+  type: library
+  steps:
+    - id: fetch
+      name: Generar CLI con Cobra
+      action: fetch:template
+      input:
+        url: ./skeletons/go-cli
+        values:
+          component_id: ${{ parameters.name }}
+    - id: publish
+      name: Publicar en GitHub
+      action: publish:github
+      input:
+        repoUrl: github.com/org/${{ parameters.name }}

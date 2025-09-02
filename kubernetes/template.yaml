@@ -1,0 +1,30 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: go-service-template
+  title: "Go Microservice"
+  description: "Plantilla para crear un microservicio en Go"
+spec:
+  owner: devops-team
+  type: service
+  steps:
+    - id: fetch
+      name: Obtener código base
+      action: fetch:template
+      input:
+        url: ./skeletons/go-service
+        values:
+          component_id: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+    - id: publish
+      name: Crear repo en GitHub
+      action: publish:github
+      input:
+        repoUrl: github.com/org/${{ parameters.name }}
+        description: ${{ parameters.description }}
+    - id: register
+      name: Registrar en Backstage
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml

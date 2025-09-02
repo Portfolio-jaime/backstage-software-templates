@@ -1,0 +1,92 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: golden-path-go-service
+  title: "Golden Path: Go/Java Service + Terraform + ArgoCD"
+  description: >
+    Crea un microservicio en Go o Java con infraestructura básica en Terraform y despliegue automático en ArgoCD.
+spec:
+  owner: devops-team
+  type: service
+
+  parameters:
+    - title: Información del servicio
+      required:
+        - name
+        - description
+        - namespace
+      properties:
+        name:
+          type: string
+          title: Nombre del servicio
+        description:
+          type: string
+          title: Descripción
+        namespace:
+          type: string
+          title: Namespace en Kubernetes
+          default: default
+        language:
+          type: string
+          title: Lenguaje
+          enum: ["go", "java"]
+          default: "go"
+
+  steps:
+    - id: fetch-code
+      name: Crear microservicio
+      action: fetch:template
+      input:
+        url: ./skeletons/${{ parameters.language }}-service
+        values:
+          component_id: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+
+    - id: terraform
+      name: Crear módulo de Terraform
+      action: fetch:template
+      input:
+        url: ./skeletons/terraform
+        values:
+          module_name: ${{ parameters.name }}-infra
+
+    - id: argocd
+      name: Generar manifiesto de ArgoCD
+      action: fs:write
+      input:
+        path: ./argocd-${{ parameters.name }}.yaml
+        content: |
+          apiVersion: argoproj.io/v1alpha1
+          kind: Application
+          metadata:
+            name: ${{ parameters.name }}
+          spec:
+            project: default
+            source:
+              repoURL: https://github.com/org/${{ parameters.name }}
+              path: k8s
+              targetRevision: main
+            destination:
+              server: https://kubernetes.default.svc
+              namespace: ${{ parameters.namespace }}
+
+    - id: publish
+      name: Publicar en GitHub
+      action: publish:github
+      input:
+        repoUrl: github.com/org/${{ parameters.name }}
+        description: ${{ parameters.description }}
+
+    - id: register
+      name: Registrar componente
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  output:
+    links:
+      - title: "Repositorio GitHub"
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: "ArgoCD Application"
+        url: https://argocd.example.com/applications/${{ parameters.name }}

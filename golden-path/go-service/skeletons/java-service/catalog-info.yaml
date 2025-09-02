@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: java-service
+  description: "Microservicio en Java Spring Boot"
+spec:
+  type: service
+  lifecycle: experimental
+  owner: java-team

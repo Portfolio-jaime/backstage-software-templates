@@ -1,0 +1,22 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: springboot-service-template
+  title: "Java Spring Boot Service"
+  description: "Plantilla para un microservicio con Spring Boot"
+spec:
+  owner: java-team
+  type: service
+  steps:
+    - id: fetch
+      name: Esqueleto de Spring Boot
+      action: fetch:template
+      input:
+        url: ./skeletons/springboot
+        values:
+          component_id: ${{ parameters.name }}
+    - id: publish
+      name: Crear repo en GitHub
+      action: publish:github
+      input:
+        repoUrl: github.com/org/${{ parameters.name }}

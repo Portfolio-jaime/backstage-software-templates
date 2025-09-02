@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${APP_NAME}
+  description: "Despliegue de aplicación en Kubernetes"
+spec:
+  type: service
+  lifecycle: experimental
+  owner: sre-team

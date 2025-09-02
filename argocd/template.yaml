@@ -1,0 +1,29 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: argocd-app-template
+  title: "ArgoCD Application"
+  description: "Plantilla para desplegar una app con ArgoCD"
+spec:
+  owner: sre-team
+  type: infrastructure
+  steps:
+    - id: generate
+      name: Crear manifiesto de ArgoCD
+      action: fs:write
+      input:
+        path: ./argocd-app.yaml
+        content: |
+          apiVersion: argoproj.io/v1alpha1
+          kind: Application
+          metadata:
+            name: ${{ parameters.appName }}
+          spec:
+            project: default
+            source:
+              repoURL: ${{ parameters.repoUrl }}
+              path: k8s
+              targetRevision: main
+            destination:
+              server: https://kubernetes.default.svc
+              namespace: ${{ parameters.namespace }}
