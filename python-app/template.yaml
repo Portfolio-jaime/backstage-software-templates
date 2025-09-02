@@ -1,7 +1,7 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: python-template
+  name: python-app
   title: Python flask template
   description: Provisions a minimalistic flask application
 spec:
@@ -26,6 +26,8 @@ spec:
           enum:
             - dev
             - prod
+            - uat 
+            - sit
 
   steps:
     - id: fetch-base
