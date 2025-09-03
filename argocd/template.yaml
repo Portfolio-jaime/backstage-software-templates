@@ -1,7 +1,7 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: argocd-app-template
+  name: argocd-template
   title: "ArgoCD Application"
   description: "Plantilla para desplegar una app con ArgoCD"
 spec:

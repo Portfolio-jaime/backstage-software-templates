@@ -1,7 +1,7 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: terraform-module-template
+  name: terraform-template
   title: "Terraform Module"
   description: "Plantilla para crear un módulo de Terraform estandarizado"
 spec:

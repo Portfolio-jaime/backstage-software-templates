@@ -1,7 +1,7 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: go-service-template
+  name: go-template
   title: "Go Microservice"
   description: "Plantilla para crear un microservicio en Go"
 spec:

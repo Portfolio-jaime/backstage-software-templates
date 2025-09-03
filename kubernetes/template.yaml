@@ -1,7 +1,7 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: k8s-deployment-template
+  name: k8s-template
   title: "Kubernetes Deployment"
   description: "Plantilla para crear manifiestos Kubernetes básicos"
 spec:
