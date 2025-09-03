@@ -42,8 +42,6 @@ spec:
       name: Publish
       action: publish:github
       input:
-        allowedHosts:
-          - github.com
         description: "Módulo de Terraform: ${{ parameters.moduleName }}"
         repoUrl: github.com?owner=your-github-org&repo=${{parameters.moduleName}}-terraform-module
         protectDefaultBranch: false
