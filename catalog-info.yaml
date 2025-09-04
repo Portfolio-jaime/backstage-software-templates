@@ -1,21 +1,11 @@
 apiVersion: backstage.io/v1alpha1
 kind: Location
 metadata:
-  name: software-templates
-  description: Plantillas de software e infraestructura para Backstage
+  name: backstage-templates
+  description: Plantillas de software organizadas por tipo
 spec:
-  type: url
   targets:
-    - ./golden-path/go-service/template.yaml
-    - ./go-service/template.yaml
-    - ./java-service/template.yaml
-    - ./terraform-module/template.yaml
-    - ./kubernetes-deployment/template.yaml
-    - ./argocd-application/template.yaml
-    - ./argocd/template.yaml
-    - ./cli-go/template.yaml
-    - ./go-app/template.yaml
-    - ./java-app/template.yaml
-    - ./kubernetes/template.yaml
-    - ./python-app/template.yaml
-    - ./terraform/template.yaml
+    - ./services/*/template.yaml
+    - ./infrastructure/*/template.yaml
+    - ./libraries/*/template.yaml
+    - ./golden-path/*/template.yaml
