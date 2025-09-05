@@ -1,0 +1,4 @@
+apiVersion: v2
+name: ${{values.app_name}}
+description: Helm chart for ${{values.app_name}} CLI
+version: 0.1.0

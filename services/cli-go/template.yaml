@@ -1,0 +1,61 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: go-cli-template
+  title: "Go CLI Tool"
+  description: "Template to create a CLI in Go with Cobra"
+spec:
+  owner: tools-team
+  type: service
+  parameters:
+    - title: Component Information
+      required:
+        - component_id
+        - environment
+      properties:
+        component_id:
+          title: Component Name
+          type: string
+          description: Name of the CLI (microservice)
+          pattern: '^([a-zA-Z][a-zA-Z0-9]*)(-[a-zA-Z0-9]+)*$'
+        description:
+          title: Description
+          type: string
+          description: Description of the CLI
+        environment:
+          title: Environment
+          type: string
+          description: Environment where this will be deployed
+          enum:
+            - DEV1
+            - PROD1
+            - UAT1
+            - SIT1
+  steps:
+    - id: fetch-base
+      name: Fetch base
+      action: fetch:template
+      input:
+        url: ./template
+        values:
+          app_name: ${{ parameters.component_id }}
+          app_env: ${{ parameters.environment }}
+          description: ${{ parameters.description }}
+    - id: publish
+      name: Publish to GitHub
+      action: publish:github
+      input:
+        description: ${{ parameters.description }}
+        repoUrl: github.com?owner=Portfolio-jaime&repo=${{ parameters.component_id }}
+        protectDefaultBranch: false
+        repoVisibility: public
+    - id: register
+      name: Register in Backstage
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: "/catalog-info.yaml"
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}

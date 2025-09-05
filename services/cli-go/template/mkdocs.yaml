@@ -1,0 +1,5 @@
+apiVersion: 1.0
+kind: Documentation
+metadata:
+  name: ${{values.app_name}}
+  description: Documentación para la CLI ${{values.app_name}}
