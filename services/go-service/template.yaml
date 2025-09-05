@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: go-service-template
   title: "Go Microservice"
-  description: "Plantilla para microservicio en Go"
+  description: "Template for microservice in Go"
 spec:
   owner: dev-team
   type: service
@@ -24,10 +24,10 @@ spec:
           type: string
           description: The environment where this component will be deployed
           enum:
-            - dev
-            - prod
-            - uat 
-            - sit
+            - DEV1
+            - PROD1
+            - UAT1
+            - SIT1
 
   steps:
     - id: fetch-base
