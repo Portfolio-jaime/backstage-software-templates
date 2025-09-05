@@ -24,10 +24,10 @@ spec:
           type: string
           description: The environment where this component will be deployed
           enum:
-            - dev
-            - prod
-            - uat 
-            - sit
+            - DEV1
+            - PROD1
+            - UAT1
+            - SIT1
 
   steps:
     - id: fetch-base
