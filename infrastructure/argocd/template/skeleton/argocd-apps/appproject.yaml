@@ -1,0 +1,66 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: ${{values.app_name}}-project
+  namespace: argocd
+  labels:
+    project: ${{values.app_name}}
+spec:
+  description: Project for ${{values.app_name}} applications
+  
+  sourceRepos:
+  - 'https://github.com/Portfolio-jaime/${{values.app_name}}'
+  - 'https://github.com/Portfolio-jaime/*'
+  
+  destinations:
+  - namespace: '${{values.app_name}}-*'
+    server: https://kubernetes.default.svc
+  - namespace: argocd
+    server: https://kubernetes.default.svc
+  
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+  - group: ''
+    kind: PersistentVolume
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+  
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: ConfigMap
+  - group: ''
+    kind: Service
+  - group: ''
+    kind: Secret
+  - group: ''
+    kind: PersistentVolumeClaim
+  - group: apps
+    kind: Deployment
+  - group: apps
+    kind: StatefulSet
+  - group: apps
+    kind: DaemonSet
+  - group: networking.k8s.io
+    kind: Ingress
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+  
+  roles:
+  - name: admin
+    description: Admin role for ${{values.app_name}} project
+    policies:
+    - p, proj:${{values.app_name}}-project:admin, applications, *, ${{values.app_name}}-project/*, allow
+    - p, proj:${{values.app_name}}-project:admin, repositories, *, *, allow
+    groups:
+    - ba-devops-team
+  
+  - name: developer
+    description: Developer role for ${{values.app_name}} project
+    policies:
+    - p, proj:${{values.app_name}}-project:developer, applications, get, ${{values.app_name}}-project/*, allow
+    - p, proj:${{values.app_name}}-project:developer, applications, sync, ${{values.app_name}}-project/*, allow
+    groups:
+    - ba-dev-team
