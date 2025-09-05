@@ -7,16 +7,55 @@ metadata:
 spec:
   owner: java-team
   type: service
+
+  parameters:
+    - title: Fill in some steps
+      required:
+        - component_id
+        - environment
+      properties:
+        component_id:
+          title: Component name
+          type: string
+          description: Provide a component (microservice) name
+          pattern: '^([a-zA-Z][a-zA-Z0-9]*)(-[a-zA-Z0-9]+)*$'
+        environment:
+          title: Environment
+          type: string
+          description: The environment where this component will be deployed
+          enum:
+            - dev
+            - prod
+            - uat 
+            - sit
+
   steps:
-    - id: fetch
-      name: Esqueleto de Spring Boot
+    - id: fetch-base
+      name: Fetch Base
       action: fetch:template
       input:
-        url: ./skeletons/springboot
+        url: ./template
         values:
-          component_id: ${{ parameters.name }}
+          app_name: ${{parameters.component_id}}
+          app_env: ${{parameters.environment}}
+
     - id: publish
-      name: Crear repo en GitHub
+      name: Publish
       action: publish:github
       input:
-        repoUrl: github.com/org/${{ parameters.name }}
+        description: This is ${{ parameters.component_id }}
+        repoUrl: github.com?owner=Portfolio-jaime&repo=${{parameters.component_id}}
+        protectDefaultBranch: false
+        repoVisibility: public
+
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: "/catalog-info.yaml"
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
