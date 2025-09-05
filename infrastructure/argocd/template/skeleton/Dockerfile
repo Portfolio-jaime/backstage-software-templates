@@ -1,10 +1,20 @@
-FROM python:3.10-alpine
+# ArgoCD configuration container
+FROM argoproj/argocd:v2.8.0
 
-COPY requirements.txt /tmp
+WORKDIR /argocd
 
-RUN pip install -r /tmp/requirements.txt
+# Copy ArgoCD configurations
+COPY argocd-apps/ ./argocd-apps/
+COPY README.md ./
 
-COPY ./src /src
+# Install kubectl for deployment
+USER root
+RUN apt-get update && apt-get install -y curl && \
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
-CMD python /src/app.py
+USER argocd
+
+# Default command
+CMD ["argocd", "version"]
 

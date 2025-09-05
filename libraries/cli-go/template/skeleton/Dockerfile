@@ -1,10 +1,20 @@
-FROM python:3.10-alpine
+FROM golang:1.21-alpine AS builder
 
-COPY requirements.txt /tmp
+WORKDIR /app
 
-RUN pip install -r /tmp/requirements.txt
+COPY go.mod go.sum ./
+RUN go mod download
 
-COPY ./src /src
+COPY . .
 
-CMD python /src/app.py
+RUN CGO_ENABLED=0 GOOS=linux go build -o ${{values.app_name}} .
+
+FROM alpine:latest
+
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+
+COPY --from=builder /app/${{values.app_name}} .
+
+ENTRYPOINT ["./${{values.app_name}}"]
 

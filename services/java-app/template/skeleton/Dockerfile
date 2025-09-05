@@ -1,10 +1,18 @@
-FROM python:3.10-alpine
+FROM maven:3.9.0-openjdk-17 AS builder
 
-COPY requirements.txt /tmp
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline
 
-RUN pip install -r /tmp/requirements.txt
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-COPY ./src /src
+FROM openjdk:17-jre-slim
 
-CMD python /src/app.py
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
 

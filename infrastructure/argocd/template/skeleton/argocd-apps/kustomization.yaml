@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: ${{values.app_name}}-argocd-apps
+
+resources:
+- application.yaml
+- appproject.yaml
+
+commonLabels:
+  managed-by: argocd
+  project: ${{values.app_name}}
+  environment: ${{values.app_env}}
+
+patches:
+- target:
+    kind: Application
+    name: ${{values.app_name}}-${{values.app_env}}
+  patch: |-
+    - op: replace
+      path: /spec/project
+      value: ${{values.app_name}}-project

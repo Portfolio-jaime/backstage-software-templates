@@ -1,10 +1,26 @@
-FROM python:3.10-alpine
+FROM golang:1.21-alpine AS builder
 
-COPY requirements.txt /tmp
+WORKDIR /app
 
-RUN pip install -r /tmp/requirements.txt
+# Copy go mod and sum files
+COPY go.mod go.sum ./
+RUN go mod download
 
-COPY ./src /src
+# Copy source code
+COPY . .
 
-CMD python /src/app.py
+# Build the application
+RUN CGO_ENABLED=0 GOOS=linux go build -o main .
+
+FROM alpine:latest
+
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+
+# Copy binary from builder
+COPY --from=builder /app/main .
+
+EXPOSE 8080
+
+CMD ["./main"]
 

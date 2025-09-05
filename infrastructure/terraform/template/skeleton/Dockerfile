@@ -1,10 +1,15 @@
-FROM python:3.10-alpine
+# Terraform Docker image for CI/CD
+FROM hashicorp/terraform:1.5
 
-COPY requirements.txt /tmp
+WORKDIR /workspace
 
-RUN pip install -r /tmp/requirements.txt
+# Copy Terraform files
+COPY *.tf ./
+COPY terraform.tfvars.example ./
 
-COPY ./src /src
+# Initialize Terraform
+RUN terraform init
 
-CMD python /src/app.py
+# Default command
+CMD ["terraform", "--help"]
 
