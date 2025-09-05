@@ -7,5 +7,4 @@ spec:
   targets:
     - ./services/*/template.yaml
     - ./infrastructure/*/template.yaml
-    - ./libraries/*/template.yaml
     - ./golden-path/*/template.yaml
