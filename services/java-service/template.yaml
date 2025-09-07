@@ -12,6 +12,7 @@ spec:
     - title: Fill in some steps
       required:
         - component_id
+        - description
         - environment
       properties:
         component_id:
@@ -19,6 +20,10 @@ spec:
           type: string
           description: Provide a component (microservice) name
           pattern: '^([a-zA-Z][a-zA-Z0-9]*)(-[a-zA-Z0-9]+)*$'
+        description:
+          title: Description
+          type: string
+          description: Description of the Java Spring Boot service
         environment:
           title: Environment
           type: string
@@ -38,12 +43,13 @@ spec:
         values:
           app_name: ${{parameters.component_id}}
           app_env: ${{parameters.environment}}
+          description: ${{parameters.description}}
 
     - id: publish
       name: Publish
       action: publish:github
       input:
-        description: This is ${{ parameters.component_id }}
+        description: ${{ parameters.description }}
         repoUrl: github.com?owner=Portfolio-jaime&repo=${{parameters.component_id}}
         protectDefaultBranch: false
         repoVisibility: public

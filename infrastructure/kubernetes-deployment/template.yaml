@@ -7,29 +7,63 @@ metadata:
 spec:
   owner: sre-team
   type: infrastructure
+  
+  parameters:
+    - title: Deployment Information
+      required:
+        - name
+        - description
+        - image
+        - namespace
+      properties:
+        name:
+          title: Deployment Name
+          type: string
+          description: Name of the Kubernetes deployment
+          pattern: '^([a-zA-Z][a-zA-Z0-9]*)(-[a-zA-Z0-9]+)*$'
+        description:
+          title: Description
+          type: string
+          description: Description of the deployment
+        image:
+          title: Container Image
+          type: string
+          description: Container image to deploy
+        namespace:
+          title: Namespace
+          type: string
+          description: Kubernetes namespace
+          default: default
+
   steps:
-    - id: write
-      name: Crear deployment
-      action: fs:write
+    - id: fetch
+      name: Fetch Base
+      action: fetch:template
       input:
-        path: ./deployment.yaml
-        content: |
-          apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            name: ${{ parameters.name }}
-          spec:
-            replicas: 2
-            selector:
-              matchLabels:
-                app: ${{ parameters.name }}
-            template:
-              metadata:
-                labels:
-                  app: ${{ parameters.name }}
-              spec:
-                containers:
-                  - name: ${{ parameters.name }}
-                    image: ${{ parameters.image }}
-                    ports:
-                      - containerPort: 8080
+        url: ./template
+        values:
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          image: ${{ parameters.image }}
+          namespace: ${{ parameters.namespace }}
+          
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        description: ${{ parameters.description }}
+        repoUrl: github.com?owner=Portfolio-jaime&repo=${{ parameters.name }}
+        protectDefaultBranch: false
+        repoVisibility: public
+        
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: "/catalog-info.yaml"
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}

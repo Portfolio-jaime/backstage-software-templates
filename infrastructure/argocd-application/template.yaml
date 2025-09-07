@@ -7,23 +7,69 @@ metadata:
 spec:
   owner: sre-team
   type: infrastructure
+  
+  parameters:
+    - title: Application Information
+      required:
+        - name
+        - description
+        - repoUrl
+        - namespace
+      properties:
+        name:
+          title: Application Name
+          type: string
+          description: Name of the ArgoCD application
+          pattern: '^([a-zA-Z][a-zA-Z0-9]*)(-[a-zA-Z0-9]+)*$'
+        description:
+          title: Description
+          type: string
+          description: Description of the application
+        repoUrl:
+          title: Repository URL
+          type: string
+          description: Git repository URL
+        namespace:
+          title: Namespace
+          type: string
+          description: Target Kubernetes namespace
+          default: default
+        path:
+          title: Manifest Path
+          type: string
+          description: Path to Kubernetes manifests in repo
+          default: k8s
+
   steps:
-    - id: write
-      name: Crear manifiesto ArgoCD
-      action: fs:write
+    - id: fetch
+      name: Fetch Base
+      action: fetch:template
       input:
-        path: ./application.yaml
-        content: |
-          apiVersion: argoproj.io/v1alpha1
-          kind: Application
-          metadata:
-            name: ${{ parameters.name }}
-          spec:
-            project: default
-            source:
-              repoURL: ${{ parameters.repoUrl }}
-              path: k8s
-              targetRevision: main
-            destination:
-              server: https://kubernetes.default.svc
-              namespace: ${{ parameters.namespace }}
+        url: ./template
+        values:
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          repoUrl: ${{ parameters.repoUrl }}
+          namespace: ${{ parameters.namespace }}
+          path: ${{ parameters.path }}
+          
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        description: ${{ parameters.description }}
+        repoUrl: github.com?owner=Portfolio-jaime&repo=${{ parameters.name }}
+        protectDefaultBranch: false
+        repoVisibility: public
+        
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: "/catalog-info.yaml"
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}

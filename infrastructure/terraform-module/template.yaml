@@ -7,16 +7,50 @@ metadata:
 spec:
   owner: cloud-team
   type: infrastructure
+  
+  parameters:
+    - title: Module Information
+      required:
+        - module_name
+        - description
+      properties:
+        module_name:
+          title: Module Name
+          type: string
+          description: Name of the Terraform module
+          pattern: '^([a-zA-Z][a-zA-Z0-9]*)(-[a-zA-Z0-9]+)*$'
+        description:
+          title: Description
+          type: string
+          description: Description of the Terraform module
+
   steps:
     - id: fetch
-      name: Esqueleto Terraform
+      name: Fetch Base
       action: fetch:template
       input:
-        url: ./skeletons/terraform
+        url: ./template
         values:
-          module_name: ${{ parameters.name }}
+          module_name: ${{ parameters.module_name }}
+          description: ${{ parameters.description }}
+          
     - id: publish
-      name: Repo Terraform
+      name: Publish
       action: publish:github
       input:
-        repoUrl: github.com/org/terraform-${{ parameters.name }}
+        description: ${{ parameters.description }}
+        repoUrl: github.com?owner=Portfolio-jaime&repo=${{ parameters.module_name }}
+        protectDefaultBranch: false
+        repoVisibility: public
+        
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: "/catalog-info.yaml"
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
