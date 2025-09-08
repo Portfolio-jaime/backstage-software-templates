@@ -2,8 +2,8 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: argocd-app-template
-  title: "ArgoCD Application"
-  description: "Plantilla para desplegar app con ArgoCD"
+  title: "ArgoCD GitOps Application"
+  description: "Plantilla para crear una aplicación GitOps con ArgoCD basada en el patrón del repositorio GitOps"
 spec:
   owner: sre-team
   type: infrastructure
@@ -13,7 +13,7 @@ spec:
       required:
         - name
         - description
-        - repoUrl
+        - project
         - namespace
       properties:
         name:
@@ -25,20 +25,34 @@ spec:
           title: Description
           type: string
           description: Description of the application
-        repoUrl:
-          title: Repository URL
+        project:
+          title: ArgoCD Project
           type: string
-          description: Git repository URL
+          description: ArgoCD project name
+          default: kubeops
+          enum:
+            - kubeops
+            - default
         namespace:
-          title: Namespace
+          title: Target Namespace
           type: string
-          description: Target Kubernetes namespace
-          default: default
-        path:
+          description: Target Kubernetes namespace for deployment
+          default: kubeops
+        manifest_path:
           title: Manifest Path
           type: string
           description: Path to Kubernetes manifests in repo
-          default: k8s
+          default: Kubernetes
+        auto_sync:
+          title: Enable Auto Sync
+          type: boolean
+          description: Enable automated synchronization
+          default: true
+        self_heal:
+          title: Enable Self Heal
+          type: boolean
+          description: Enable self-healing for the application
+          default: true
 
   steps:
     - id: fetch
@@ -49,9 +63,11 @@ spec:
         values:
           name: ${{ parameters.name }}
           description: ${{ parameters.description }}
-          repoUrl: ${{ parameters.repoUrl }}
+          project: ${{ parameters.project }}
           namespace: ${{ parameters.namespace }}
-          path: ${{ parameters.path }}
+          manifest_path: ${{ parameters.manifest_path }}
+          auto_sync: ${{ parameters.auto_sync }}
+          self_heal: ${{ parameters.self_heal }}
           
     - id: publish
       name: Publish

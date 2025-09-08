@@ -3,18 +3,25 @@ kind: Application
 metadata:
   name: ${{values.name}}
   namespace: argocd
+  labels:
+    app.kubernetes.io/name: ${{values.name}}
+    app.kubernetes.io/managed-by: argocd
 spec:
-  project: default
+  project: ${{values.project}}
   source:
-    repoURL: ${{values.repoUrl}}
-    path: ${{values.path}}
+    repoURL: https://github.com/Portfolio-jaime/${{values.name}}.git
+    path: ${{values.manifest_path}}
     targetRevision: main
   destination:
     server: https://kubernetes.default.svc
     namespace: ${{values.namespace}}
   syncPolicy:
+    {%- if values.auto_sync %}
     automated:
       prune: true
-      selfHeal: true
+      selfHeal: ${{values.self_heal}}
+    {%- endif %}
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+  revisionHistoryLimit: 10

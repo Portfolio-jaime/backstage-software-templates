@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"os"
+
+	"github.com/Portfolio-jaime/${{values.app_name}}/cmd"
+)
 
 func main() {
-	fmt.Println("Bienvenido a ${{values.app_name}} CLI!")
+	if err := cmd.Execute(); err != nil {
+		os.Exit(1)
+	}
 }

@@ -1,0 +1,78 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '${{values.manifest_path}}/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '${{values.manifest_path}}/**'
+
+jobs:
+  validate-manifests:
+    runs-on: ubuntu-latest
+    name: Validate Kubernetes Manifests
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup kubeval
+      run: |
+        wget https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
+        tar xf kubeval-linux-amd64.tar.gz
+        sudo cp kubeval /usr/local/bin
+        
+    - name: Validate Kubernetes manifests
+      run: |
+        kubeval ${{values.manifest_path}}/*.yaml
+        
+    - name: Setup kubeconform
+      run: |
+        curl -L https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar xz
+        sudo mv kubeconform /usr/local/bin
+        
+    - name: Validate with kubeconform
+      run: |
+        kubeconform -summary ${{values.manifest_path}}/*.yaml
+
+  security-scan:
+    runs-on: ubuntu-latest
+    name: Security Scan
+    needs: validate-manifests
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '${{values.manifest_path}}'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  notify-argocd:
+    runs-on: ubuntu-latest
+    name: Notify ArgoCD
+    needs: [validate-manifests, security-scan]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Trigger ArgoCD Sync
+      run: |
+        echo "Kubernetes manifests updated - ArgoCD will automatically sync"
+        echo "Application: ${{values.name}}"
+        echo "Namespace: ${{values.namespace}}"
+        echo "Project: ${{values.project}}"
