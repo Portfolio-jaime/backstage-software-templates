@@ -44,7 +44,7 @@ spec:
           app_name: ${{parameters.component_id}}
           app_env: ${{parameters.environment}}
           description: ${{parameters.description}}
-
+    
     - id: publish
       name: Publish
       action: publish:github
