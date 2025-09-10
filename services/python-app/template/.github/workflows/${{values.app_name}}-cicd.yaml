@@ -27,7 +27,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: Portfolio-jaime/${{values.app_name}}:${{ '${{ env.COMMIT_ID }}' }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{values.app_name}}:${{ '${{ env.COMMIT_ID }}' }}
     outputs:
       commit_id: ${{ '${{ env.COMMIT_ID }}' }}
 
