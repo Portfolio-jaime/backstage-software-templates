@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: Portfolio-jaime/${{values.app_name}}
+  repository: jaimehenao8126/${{values.app_name}}
   pullPolicy: IfNotPresent
   tag: ${{values.app_name}}-${{values.app_env}}-latest
 imagePullSecrets: []
