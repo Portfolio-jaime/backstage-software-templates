@@ -1,0 +1,14 @@
+site_name: '${{values.app_name}}'
+site_description: 'Main documentation for the ${{values.app_name}}'
+repo_url: https://github.com/Portfolio-jaime/${{values.app_name}}
+edit_uri: edit/main/docs
+
+plugins:
+  - techdocs-core
+
+nav:
+  - Overview:
+      - Introducción y API: 'docs/index.md'
+      - Arquitectura: 'docs/arquitectura.md'
+      - CI/CD y GitOps: 'docs/cicd.md'
+      - Casos de Uso y Pruebas: 'docs/uso.md'
