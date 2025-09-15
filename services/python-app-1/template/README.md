@@ -1,4 +1,4 @@
-# python-app-1
+# ${{values.app_name}}
 
 Aplicación web Python Flask lista para Kubernetes, CI/CD, Helm y GitOps.
 
@@ -7,7 +7,7 @@ Aplicación web Python Flask lista para Kubernetes, CI/CD, Helm y GitOps.
 ## 📦 Estructura del Proyecto
 
 ```
-python-app-1/
+${{values.app_name}}/
 ├── charts/                # Helm chart para despliegue en K8s
 ├── src/                   # Código fuente Flask
 ├── templates/             # Plantillas UI (Jinja2)
@@ -35,12 +35,12 @@ python-app-1/
 ## 🏗️ Despliegue con Helm
 
 ```sh
-helm install python-app-1 ./charts/python-app-1 \
-  --set image.repository=jaimehenao8126/python-app-1 \
+helm install ${{values.app_name}} ./charts/${{values.app_name}} \
+  --set image.repository=jaimehenao8126/${{values.app_name}} \
   --set image.tag=<tag>
 ```
 
-- Ingress por defecto: `python-app-1.test.com`
+- Ingress por defecto: `${{values.app_name}}.test.com`
 - Health/readiness: `/api/v1/healthz`
 
 ---
@@ -56,7 +56,7 @@ helm install python-app-1 ./charts/python-app-1 \
 ## 📝 Documentación Extendida
 
 - [docs/index.md](./docs/index.md): Uso de endpoints, ejemplos curl, detalles de API
-- [charts/python-app-1/](./charts/python-app-1/): Helm chart y valores
+- [charts/python-app-1/](./charts/${{values.app_name}}/): Helm chart y valores
 
 ---
 
@@ -67,7 +67,3 @@ helm install python-app-1 ./charts/python-app-1 \
 - Pruebas de health/readiness en K8s
 
 ---
-
-## 👤 Autor
-
-Jaime Andrés Henao
