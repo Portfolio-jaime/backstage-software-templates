@@ -2,7 +2,7 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: python-app-1-template
-  title: Python flask template with argocd
+  title: Python-app-1 flask template with ArgoCD/CI-CD
   description: Provisions a minimalistic flask application
 spec:
   owner: development
