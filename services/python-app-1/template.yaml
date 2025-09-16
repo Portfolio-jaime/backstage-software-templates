@@ -46,10 +46,10 @@ spec:
       input:
         url: ./template
         values:
-          app_name: ${{parameters.component_id}}
-          app_env: ${{parameters.environment}}
-          description: ${{parameters.description}}
-          app_project: ${{parameters.app_project}}
+          app_name: ${{ parameters.component_id }}
+          app_env: ${{ parameters.environment | lower }}
+          description: ${{ parameters.description }}
+          app_project: ${{ parameters.app_project }}
     
     - id: publish
       name: Publish

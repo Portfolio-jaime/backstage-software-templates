@@ -48,7 +48,7 @@ jobs:
             echo "ERROR: $values_file does not exist."
             exit 1
           fi
-          yq -Yi '.image.tag = "${{needs.ci.outputs.commit_id}}"' "$values_file"
+          yq -Yi '.image.tag = "${{'${{needs.ci.outputs.commit_id}}' }}"' "$values_file"
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
