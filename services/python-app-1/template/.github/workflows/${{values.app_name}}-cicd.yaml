@@ -43,7 +43,12 @@ jobs:
         run: |
           echo ${{ '${{needs.ci.outputs.commit_id}}' }}
           pip install yq
-          yq -Yi '.image.tag = "${{'${{needs.ci.outputs.commit_id}}' }}"' charts/${{values.app_name}}/values-${{values.app_env}}.yaml
+          values_file="charts/${{values.app_name}}/values-${{values.app_env}}.yaml"
+          if [ ! -f "$values_file" ]; then
+            echo "ERROR: $values_file does not exist."
+            exit 1
+          fi
+          yq -Yi '.image.tag = "${{needs.ci.outputs.commit_id}}"' "$values_file"
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
