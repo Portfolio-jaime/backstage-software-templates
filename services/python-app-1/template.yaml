@@ -30,10 +30,10 @@ spec:
           type: string
           description: The environment where this component will be deployed
           enum:
-            - DEV1
-            - PROD1
-            - UAT1
-            - SIT1
+            - dev1
+            - prod1
+            - uat1
+            - sit1
         app_project:
           title: ArgoCD Project
           type: string
