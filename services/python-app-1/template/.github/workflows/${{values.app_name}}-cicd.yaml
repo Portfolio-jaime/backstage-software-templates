@@ -72,7 +72,7 @@ jobs:
 
           # Connects the argocd repo
           repo="https://github.com/Portfolio-jaime/${{values.app_name}}.git"
-          argocd repo list | grep -q $repo || argocd repo add $repo
+          argocd repo list | grep -q $repo || argocd repo add $repo --project ${{values.app_project}}
 
           # Creates the argocd app
           argocd app get ${{values.app_name}} || argocd app create ${{values.app_name}} \
@@ -83,7 +83,8 @@ jobs:
             --values values-${{values.app_env}}.yaml \
             --revision master \
             --sync-policy manual \
-            --sync-option CreateNamespace=true
+            --sync-option CreateNamespace=true \
+            --project ${{values.app_project}}
 
       - name: Argocd app sync
         shell: bash
