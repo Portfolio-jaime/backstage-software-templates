@@ -88,7 +88,7 @@ jobs:
             --values values-${{values.app_env}}.yaml \
             --revision main \
             --sync-policy manual \
-            --sync-option CreateNamespace=true
+            --sync-option CreateNamespace=true \
             --project ${{values.app_project}}
 
       - name: Argocd app sync
