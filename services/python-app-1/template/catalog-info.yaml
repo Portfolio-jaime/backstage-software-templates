@@ -6,6 +6,7 @@ metadata:
   annotations:
     github.com/project-slug: Portfolio-jaime/${{values.app_name}}
     backstage.io/techdocs-ref: dir:.
+    argocd/app-name: ${{values.app_name}}
 spec:
   type: service
   owner: development
