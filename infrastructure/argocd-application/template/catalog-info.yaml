@@ -6,6 +6,19 @@ metadata:
   annotations:
     github.com/project-slug: Portfolio-jaime/${{values.name}}
     backstage.io/techdocs-ref: dir:.
+    argocd/app-name: ${{values.name}}
+    # Kubernetes annotations for linking to deployed resources
+    backstage.io/kubernetes-id: ${{values.name}}
+    backstage.io/kubernetes-namespace: ${{values.namespace | default('argocd')}}
+  labels:
+    environment: ${{values.environment | default('development')}}
+    deployment-type: gitops
+    ci-cd: argocd
+  tags:
+    - argocd
+    - gitops
+    - kubernetes
+    - deployment
 spec:
   type: resource
   owner: sre-team

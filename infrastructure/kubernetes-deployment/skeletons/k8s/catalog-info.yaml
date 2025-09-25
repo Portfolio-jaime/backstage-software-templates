@@ -3,6 +3,19 @@ kind: Component
 metadata:
   name: ${APP_NAME}
   description: "Despliegue de aplicación en Kubernetes"
+  annotations:
+    github.com/project-slug: Portfolio-jaime/${APP_NAME}
+    backstage.io/techdocs-ref: dir:.
+    # Kubernetes annotations for linking to cluster resources
+    backstage.io/kubernetes-id: ${APP_NAME}
+    backstage.io/kubernetes-namespace: ${NAMESPACE:-default}
+  labels:
+    environment: ${ENVIRONMENT:-development}
+    deployment-type: kubernetes
+  tags:
+    - kubernetes
+    - infrastructure
+    - deployment
 spec:
   type: service
   lifecycle: experimental

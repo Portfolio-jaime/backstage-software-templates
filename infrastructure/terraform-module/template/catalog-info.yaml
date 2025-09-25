@@ -6,6 +6,18 @@ metadata:
   annotations:
     github.com/project-slug: Portfolio-jaime/${{values.module_name}}
     backstage.io/techdocs-ref: dir:.
+    # Optional: Kubernetes annotations if this module creates K8s resources
+    backstage.io/kubernetes-id: ${{values.module_name}}
+    backstage.io/kubernetes-namespace: ${{values.namespace | default('default')}}
+  labels:
+    environment: ${{values.environment | default('development')}}
+    infrastructure: terraform
+    deployment-type: infrastructure
+  tags:
+    - terraform
+    - infrastructure
+    - iac
+    - kubernetes
 spec:
   type: resource
   owner: cloud-team

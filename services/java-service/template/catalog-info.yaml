@@ -6,6 +6,18 @@ metadata:
   annotations:
     github.com/project-slug: Portfolio-jaime/${{values.app_name}}
     backstage.io/techdocs-ref: dir:.
+    # Kubernetes annotations for linking to cluster resources
+    backstage.io/kubernetes-id: ${{values.app_name}}
+    backstage.io/kubernetes-namespace: ${{values.namespace | default('default')}}
+  labels:
+    environment: ${{values.environment | default('development')}}
+    language: java
+    deployment-type: kubernetes
+  tags:
+    - java
+    - spring-boot
+    - service
+    - kubernetes
 spec:
   type: service
   owner: java-team

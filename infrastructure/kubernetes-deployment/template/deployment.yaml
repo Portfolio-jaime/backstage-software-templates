@@ -5,6 +5,8 @@ metadata:
   namespace: ${{values.namespace}}
   labels:
     app: ${{values.name}}
+    # Backstage Kubernetes identification label
+    backstage.io/kubernetes-id: ${{values.name}}
 spec:
   replicas: 2
   selector:
@@ -14,6 +16,8 @@ spec:
     metadata:
       labels:
         app: ${{values.name}}
+        # Backstage Kubernetes identification label for pods
+        backstage.io/kubernetes-id: ${{values.name}}
     spec:
       containers:
         - name: ${{values.name}}

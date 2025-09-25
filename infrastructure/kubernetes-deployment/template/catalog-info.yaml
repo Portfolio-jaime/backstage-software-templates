@@ -6,7 +6,16 @@ metadata:
   annotations:
     github.com/project-slug: Portfolio-jaime/${{values.name}}
     backstage.io/techdocs-ref: dir:.
+    # Kubernetes annotations for linking to cluster resources
+    backstage.io/kubernetes-id: ${{values.name}}
+    backstage.io/kubernetes-namespace: ${{values.namespace}}
+  labels:
+    environment: development
+    deployment-type: kubernetes
+  tags:
+    - kubernetes
+    - infrastructure
 spec:
-  type: resource
+  type: service
   owner: sre-team
   lifecycle: experimental

@@ -5,6 +5,8 @@ metadata:
   namespace: ${{values.namespace}}
   labels:
     app: ${{values.name}}
+    # Backstage Kubernetes identification label
+    backstage.io/kubernetes-id: ${{values.name}}
 spec:
   selector:
     app: ${{values.name}}

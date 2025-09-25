@@ -6,7 +6,20 @@ metadata:
   annotations:
     github.com/project-slug: Portfolio-jaime/${{values.app_name}}
     backstage.io/techdocs-ref: dir:.
+    # Kubernetes annotations for linking to cluster resources (if deployed)
+    backstage.io/kubernetes-id: ${{values.app_name}}
+    backstage.io/kubernetes-namespace: ${{values.namespace | default('default')}}
+  labels:
+    environment: ${{values.environment | default('development')}}
+    language: go
+    type: cli
+    deployment-type: kubernetes
+  tags:
+    - golang
+    - cli
+    - tools
+    - kubernetes
 spec:
-  type: service
+  type: tool
   owner: tools-team
   lifecycle: experimental

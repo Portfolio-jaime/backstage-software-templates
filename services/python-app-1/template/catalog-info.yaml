@@ -7,6 +7,19 @@ metadata:
     github.com/project-slug: Portfolio-jaime/${{values.app_name}}
     backstage.io/techdocs-ref: dir:.
     argocd/app-name: ${{values.app_name}}
+    # Kubernetes annotations for linking to cluster resources
+    backstage.io/kubernetes-id: ${{values.app_name}}
+    backstage.io/kubernetes-namespace: ${{values.namespace | default('default')}}
+  labels:
+    environment: ${{values.environment | default('development')}}
+    language: python
+    deployment-type: kubernetes
+    ci-cd: argocd
+  tags:
+    - python
+    - service
+    - kubernetes
+    - argocd
 spec:
   type: service
   owner: development

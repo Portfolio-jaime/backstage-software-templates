@@ -6,6 +6,20 @@ metadata:
   annotations:
     github.com/project-slug: Portfolio-jaime/${{values.component_id}}
     backstage.io/techdocs-ref: dir:.
+    # Kubernetes annotations for linking to cluster resources
+    backstage.io/kubernetes-id: ${{values.component_id}}
+    backstage.io/kubernetes-namespace: ${{values.namespace | default('default')}}
+  labels:
+    environment: ${{values.environment | default('development')}}
+    language: java
+    deployment-type: kubernetes
+    golden-path: true
+  tags:
+    - java
+    - spring-boot
+    - service
+    - kubernetes
+    - golden-path
 spec:
   type: service
   lifecycle: experimental
