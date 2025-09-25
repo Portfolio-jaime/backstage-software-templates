@@ -30,10 +30,24 @@ spec:
           type: string
           description: Container image to deploy
         namespace:
-          title: Namespace
+          title: Kubernetes Namespace
           type: string
-          description: Kubernetes namespace
-          default: default
+          description: Target namespace for deployment
+          default: dev1
+          enum:
+            - dev1
+            - sit1
+            - uat1
+            - prod1
+            - python
+            - default
+          enumNames:
+            - 'Development (dev1)'
+            - 'System Integration Test (sit1)'
+            - 'User Acceptance Test (uat1)'
+            - 'Production (prod1)'
+            - 'Python Apps (python)'
+            - 'Default (default)'
 
   steps:
     - id: fetch

@@ -33,6 +33,11 @@ spec:
             - PROD1
             - UAT1
             - SIT1
+          enumNames:
+            - 'Development (dev1 namespace)'
+            - 'Production (prod1 namespace)'
+            - 'User Acceptance Test (uat1 namespace)'
+            - 'System Integration Test (sit1 namespace)'
 
   steps:
     - id: fetch-base

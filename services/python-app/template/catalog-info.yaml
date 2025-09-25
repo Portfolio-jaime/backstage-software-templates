@@ -8,9 +8,19 @@ metadata:
     backstage.io/techdocs-ref: dir:.
     # Kubernetes annotations for linking to cluster resources
     backstage.io/kubernetes-id: ${{values.app_name}}
-    backstage.io/kubernetes-namespace: ${{values.namespace | default('default')}}
+    {% if values.app_env == 'DEV1' %}
+    backstage.io/kubernetes-namespace: dev1
+    {% elif values.app_env == 'SIT1' %}
+    backstage.io/kubernetes-namespace: sit1
+    {% elif values.app_env == 'UAT1' %}
+    backstage.io/kubernetes-namespace: uat1
+    {% elif values.app_env == 'PROD1' %}
+    backstage.io/kubernetes-namespace: prod1
+    {% else %}
+    backstage.io/kubernetes-namespace: default
+    {% endif %}
   labels:
-    environment: ${{values.environment | default('development')}}
+    environment: {% if values.app_env == 'PROD1' %}production{% else %}development{% endif %}
     language: python
     deployment-type: kubernetes
   tags:
